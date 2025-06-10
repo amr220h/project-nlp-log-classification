@@ -2,26 +2,20 @@ from sentence_transformers import SentenceTransformer
 import joblib
 import numpy as np
 
-  # Load the sentence transformer model
+# Load the sentence transformer model
 transformer_model = SentenceTransformer('all-MiniLM-L6-v2')
 
-
-  # Load the saved classifier
+# Load the saved classifier
 classifier = joblib.load('models/log_classifier_model.pkl')
 
-
 def classify_with_bert(log_message):
+    # Encode the log message
+    embedding = transformer_model.encode([log_message])  # shape: (1, 384)
 
+    # Predict the class
+    prediction = classifier.predict(embedding)
 
-  # Encode the log message
-  embedding = transformer_model.encode([log_message])
-
-  # Predict the class
-  prediction = classifier.predict(embedding)
-
-  return prediction[0]
-
-
+    return prediction[0]
 
 if __name__ == "__main__":  
     # Example usage
